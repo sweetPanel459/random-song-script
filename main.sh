@@ -1,5 +1,7 @@
 #! /bin/bash
 
+ 
+
 declare -r pathThemes="file:///media/otpfullstack/Windows/cancionesuwu"
 declare -a songList=()
 declare numberOfSongs
