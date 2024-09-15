@@ -9,12 +9,35 @@ selectPath (){
    fi
 }
 
+selectPlayList () {
+   declare -r path=$(cat ./config/directory-path.txt)
+   declare -a playListSong=()
+   declare numerberOfSong
+
+   if [[ -z "$1"  ]]; then
+      echo "Numero de canciones"
+      read numberOfSong
+   else
+      numberOfSong=$1 
+   fi
+
+   readarray -t playList < <(find "$path" -type f -printf "%f\n" | shuf -n $numberOfSong) 
+
+   for songs in "${playList[@]}"; do 
+      playListSong+=("$path/$songs")
+   done
+
+   cvlc --intf dummy "${playListSong[@]}" 2> /dev/null
+}
 
 
 if [[ -s ./config/directory-path.txt ]]; then
+   selectPlayList $1
 else
    selectPath
 fi
+
+
 
 # declare -r pathThemes="file:///media/otpfullstack/Windows/cancionesuwu"
 # declare -a songList=()
