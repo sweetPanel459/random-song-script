@@ -28,18 +28,22 @@ selectPlayList () {
    done
 
    runPlaylist "${listSongNames[@]}" $path
+   drawInterface "${listSongNames[@]}"
 }
 
 runPlaylist() {
    declare -r playlistSongs=()
 
    for (( i=1; i<$#; i++ )); do
-      playlistSong+=("${!#}/${!i}")
+      playlistSong+=("${@: -1}/${!i}")
    done
 
    cvlc --intf dummy "${playlistSong[@]}" 2> /dev/null
 }
 
+drawIntreface(){
+   echo $@
+}
 
 if [[ -s ./config/directory-path.txt ]]; then
    selectPlayList $1
