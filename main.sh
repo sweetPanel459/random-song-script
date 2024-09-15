@@ -24,12 +24,22 @@ selectPlayList () {
    readarray -t playList < <(find "$path" -type f -printf "%f\n" | shuf -n $numberOfSong) 
 
    for songs in "${playList[@]}"; do 
-      playListSong+=("$path/$songs")
+      playListSong+=("$songs")
    done
 
-   cvlc --intf dummy "${playListSong[@]}" 2> /dev/null
+   # cvlc --intf dummy "${playListSong[@]}" 2> /dev/null
+   runPlayList "${playListSong[@]}"
 }
 
+runPlayList() {
+
+   for songs in "$@"; do 
+      echo $songs
+   done
+
+
+   echo "$1 desde la funcion"
+}
 
 if [[ -s ./config/directory-path.txt ]]; then
    selectPlayList $1
