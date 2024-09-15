@@ -11,7 +11,7 @@ selectPath (){
 
 selectPlayList () {
    declare -r path=$(cat ./config/directory-path.txt)
-   declare -a playListSong=()
+   declare -a listSongNames=()
    declare numerberOfSong
 
    if [[ -z "$1"  ]]; then
@@ -21,25 +21,25 @@ selectPlayList () {
       numberOfSong=$1 
    fi
 
-   readarray -t playList < <(find "$path" -type f -printf "%f\n" | shuf -n $numberOfSong) 
+   readarray -t selectedSongs < <(find "$path" -type f -printf "%f\n" | shuf -n $numberOfSong) 
 
-   for songs in "${playList[@]}"; do 
-      playListSong+=("$songs")
+   for songs in "${selectedSongs[@]}"; do 
+      listSongNames+=("$songs")
    done
 
-   # cvlc --intf dummy "${playListSong[@]}" 2> /dev/null
-   runPlayList "${playListSong[@]}"
+   runPlaylist "${listSongNames[@]}" $path
 }
 
-runPlayList() {
+runPlaylist() {
+   declare -r playlistSongs=()
 
-   for songs in "$@"; do 
-      echo $songs
+   for (( i=1; i<$#; i++ )); do
+      playlistSong+=("${!#}/${!i}")
    done
 
-
-   echo "$1 desde la funcion"
+   cvlc --intf dummy "${playlistSong[@]}" 2> /dev/null
 }
+
 
 if [[ -s ./config/directory-path.txt ]]; then
    selectPlayList $1
